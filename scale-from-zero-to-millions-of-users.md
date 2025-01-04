@@ -41,7 +41,7 @@ Os NoSQL podem ser a escolha certa se:
 - É necessário apenas serializar e desserializar dados (JSON, HTML, YAML, etc).
 - Precisa armazenar uma grande quantidade de dados.
 
-## Dimensionamento vertical x horizontal
+## Dimensionamento vertical x horizontal 🚦
 
 ### Vertical
 
@@ -61,7 +61,7 @@ No desenho acima, caso o servidor caia, os usuários não conseguiram ter acesso
 
 ***failover** é uma técnica de recuperação de desastre que permite que sistemas e redes continuem funcionando mesmo quando há falhas ou interrupções.
 
-## Balanceador de carga
+## Balanceador de carga ⚖️
 
 ![design de balanceador de cargas](/assets/images/image-3.png)
 
