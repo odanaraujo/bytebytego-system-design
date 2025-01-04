@@ -75,3 +75,37 @@ Após adicionar um balanceador e um segundo servidor, resolvemos com sucesso o p
 - Digamos que o tráfego aumente rapidamente e esses dois servidores não sejam suficientes, o balanceador pode resolver esse problema: basta adicionar mais um servidor ao pool de servidores Web e o balanceador começará a enviar de forma automática solicitações a ele. 
 
 Agora que a camada Web está protegida, devemos pensar na camada de dados. A replicação de banco de dados é uma ótima técnica para resolver failover e redundância. 
+
+## replicação de banco de dados :eject_button:
+
+A replicação de banco de dados pode ser usada em muitos sistemas de gerenciamento de banco de dados, geralmente com uma relação **master/slave** entre o original (master) e as réplicas (slave).
+
+Geralmente, o banco master só dá suporte as operações de escritas. Os slaves recebem uma cópia desses dados e suporta apenas as operações de leitura. Todas as operações como **update/insert/delete** devem ser feitas no banco de dados master. Como nas maiorias das aplicações a quantidade de leituras são maior que a de escrita, geralmente teremos mais banco de dados slave operando.
+
+![alt text](/assets/images//db-replica.png)
+
+## Vantagens de replicação de banco de dados
+
+- **Melhor desempenho:** No modelo master-slave, todas as gravações e atualizações acontecem na master; enquanto as operações de leitura acontecem na slave. Esse modelo melhora o desempenho pois garante que mais consultas sejam processadas em paralelo.
+- **Confiabilidade**: Se acontecer de um servidor de banco de dados for destruído por um desastre natural, por exemplo, não precisaremos nos preocupar, pois os dados serão replicados em vários locais.
+- **Alta disponibilidade:** Ao replicar os dados em diferentes locais, o site permite estar em operação mesmo que um banco de dados esteja offline. 
+
+Abaixo, veremos as vantagens que temos na replicação de banco de dados caso um servidor fique offline.
+
+- Caso o servidor do slave fique offline, as operações de leituras serão transferidas para o BD master temporariamente. Assim que o problema for sanado, um novo BD slave será replicado no lugar do antigo e as operações de leitura serão transferidas para esse novo slave.
+- Porém, se um master ficar offline, um servidor slave será promovido para master temporariamente. Todas as operações de escrita serão executadas nesse novo servidor temporário. Em paralelo, um novo servidor slave irá substituir esse que foi promovido imediatamente.
+  - Esse processo é mais complicado em sistemas produtivos, pois é necessário garantir que os dados do slave esteja atualizado, para não perder dados. Caso não esteja, é necessário executar um script de recuperação de dados. Podemos usar técnicas mais avançadas, tais como multi-masters e replicação circular. [Para mais detalhes](https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/)
+
+***
+## Adicionando um balanceador de carga.
+
+![balanceador de carga para banco de dados](/assets//images/db-balanceador.png)
+
+**Sobre o design**:
+- Um usuário obtém o IP do balanceador de carga do DNS.
+- Um usuário conecta o balanceador ao IP.
+- A solicitação HTTP é roteado para o servidor 1 ou para o servidor 2.
+- Um servidor Web ler os dados em um banco de dados slave.
+- Um servidor Web roteia todas as operações de escrita para o master.
+
+## Cache
