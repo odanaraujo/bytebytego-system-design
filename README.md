@@ -9,7 +9,7 @@ Este repositório foi criado com o objetivo de enriquecer meu conhecimento em Sy
 - E outros tópicos essenciais para a construção de sistemas escaláveis e robustos.
 
 ## Sobre o Curso
-O conteúdo deste repositório é baseado no curso oferecido pelo **ByteByteGo**, que é amplamente reconhecido por fornecer estratégias práticas e exemplos detalhados para entrevistas de design de sistema. 
+O conteúdo deste repositório é baseado no curso oferecido pelo [**ByteByteGo**](https://bytebytego.com/), que é amplamente reconhecido por fornecer estratégias práticas e exemplos detalhados para entrevistas de design de sistema. 
 
 ## Objetivos
 - Entender e aplicar os princípios de design de sistemas escaláveis.
