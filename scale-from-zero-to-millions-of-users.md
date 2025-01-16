@@ -80,7 +80,7 @@ Agora que a camada Web está protegida, devemos pensar na camada de dados. A rep
 
 A replicação de banco de dados pode ser usada em muitos sistemas de gerenciamento de banco de dados, geralmente com uma relação **master/slave** entre o original (master) e as réplicas (slave).
 
-Geralmente, o banco master só dá suporte as operações de escritas. Os slaves recebem uma cópia desses dados e suporta apenas as operações de leitura. Todas as operações como **update/insert/delete** devem ser feitas no banco de dados master. Como nas maiorias das aplicações a quantidade de leituras são maior que a de escrita, geralmente teremos mais banco de dados slave operando.
+Geralmente, o banco master só dá suporte as operações de escritas. Os slaves recebem uma cópia desses dados e suportam apenas as operações de leitura. Todas as operações como **update/insert/delete** devem ser feitas no banco de dados master. Como nas maiorias das aplicações a quantidade de leituras são maior que a de escrita, geralmente teremos mais banco de dados slave operando.
 
 ![alt text](/assets/images//db-replica.png)
 
@@ -109,3 +109,27 @@ Abaixo, veremos as vantagens que temos na replicação de banco de dados caso um
 - Um servidor Web roteia todas as operações de escrita para o master.
 
 ## Cache
+
+O cache é uma área de armazenamento temporário que armazena o resultado de respostas caras ou dados acessados com frequência na memória, para que as solicitações subsequentes sejam atendidas mais rapidamente. 
+
+### Camada de cache
+
+A camada de cache é uma camada de armazenamento de dados temporária, muito mais rápida que o banco de dados.
+
+![camada de cache](/assets/images/camada-cache.png)
+
+* Depois de receber uma solicitação, um servidor WEB primeiro verifica se o cache tem a resposta disponível. Em caso afirmativo, ele envia os dados de volta ao cliente. Caso contrário, ele consulta o banco de dados, armazena a resposta no cache e a envia de volta ao cliente. Essa estratégia é chamada de cache de leitura.
+
+### Considerações 
+
+* Decida quando usar o cache. Considere quando os dados são lidos com frequência, mas modificados com pouca frequência.
+* Dados importantes devem ser salvos em banco de dados persistentes, pois, um cache pode ser reiniciado e todos os dados na memória serão perdidos.
+* Ter uma política de expiração. Depois que os dados são armazenados expiram, eles são removidos do cache. Caso não exista essa política, os dados ficaram salvos em memória permanentemente. É aconselhável não tornar a data muito curta, pois fará com que aumente a ida ao banco de dados para recarregar. Também não é aconselhável um tempo muito longo, pois os dados podem ficar absoletos.
+* Consistência. Isso envolve manter o armazenamento de dados e o cache sincronizaos. 
+* Mitigando falhas. Um único servidor de cache representa um potencial ponto único de falha (SPOF). Dessa forma, vários servidores de cache em diferentes data centers são recomendados. Também podemos provisionar um excesso a memória necessária em determinadas porcentagens. Isso fornecerá um buffer à medida que o uso de memória aumenta.
+
+![ponto único de falha](/assets/images/cache-SPOF.png)
+
+* Política de remoção. Quando o cache estiver cheio, qualquer solicitação para adicionar itens ao cache poderá fazer com que os itens existentes sejam removidos. A LRU (Menos usada recentemente) é a política de remoção de cache mais popular. Temos também a LFU (Menos usada com frequência) ou a FIFO(primeiro a entrar, primeiro a sair) podem ser adotadas para atender a diferentes casos de uso.
+
+## Rede de distribuição de conteúdo (CDN)
